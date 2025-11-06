@@ -194,3 +194,7 @@ class ProductModel:
         }
         self.products.append(new_product)
         return new_product
+    
+    def getAllProduct(self):
+        """Return all products in the inventory"""
+        return self.products
