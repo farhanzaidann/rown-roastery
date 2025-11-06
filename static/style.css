@@ -1,0 +1,128 @@
+
+:root {
+    --primary-red: #C90000; 
+    --dark-red: #630000;
+    --light-red: #f8d7da;
+    --white: #FFFFFF;
+    --cream: #fffefc;
+    --gray: #6c757d;
+    --light-gray: #f8f9fa;
+}
+
+.bg-primary-red {
+    background-color: var(--primary-red) !important;
+}
+
+.bg-dark-red {
+    background-color: var(--dark-red) !important;
+}
+
+.text-primary-red {
+    color: var(--primary-red) !important;
+}
+
+.text-dark-red {
+    color: var(--dark-red) !important;
+}
+
+.btn-primary-red {
+    background-color: var(--primary-red);
+    border-color: var(--primary-red);
+    color: var(--white);
+}
+
+.btn-primary-red:hover {
+    background-color: var(--dark-red);
+    border-color: var(--dark-red);
+}
+
+.bg-header-gradient {
+    background: linear-gradient(to right, var(--primary-red), var(--dark-red));
+}
+
+.table-dark-red {
+    background-color: var(--dark-red) !important;
+    color: var(--white) !important;
+}
+
+.table-dark-red th {
+    border: none;
+    font-weight: 600;
+}
+
+.card {
+    border: none;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+}
+
+.footer {
+    background-color: var(--dark-red) !important;
+    margin-top: auto;
+    width: 100%;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-red);
+    box-shadow: 0 0 0 0.2rem rgba(201, 0, 0, 0.25);
+}
+
+.btn {
+    border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .d-md-flex {
+        display: flex !important;
+    }
+    
+    .justify-content-md-end {
+        justify-content: center !important;
+    }
+    
+    .me-md-2 {
+        margin-right: 0 !important;
+        margin-bottom: 10px;
+    }
+}
+
+.coffee-icon {
+    color: var(--primary-red);
+}
+
+.alert {
+    border-radius: 4px;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.table th {
+    font-weight: 600;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}

@@ -1,0 +1,145 @@
+{% extends "layout.html" %}
+
+{% block title %}Beranda - Rown Coffee{% endblock %}
+
+{% block content %}
+<!-- Header with gradient background -->
+<header class="bg-header-gradient text-white py-5">
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' if category == 'success' else 'info' }} alert-dismissible fade show"
+            role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div class="row align-items-center">
+            <div class="col-12 col-lg-8 text-center text-lg-start">
+                <h1 class="display-4 fw-bold">Selamat Datang di Rown Coffee</h1>
+                <p class="lead mt-3">Menyediakan biji kopi terbaik dari berbagai penjuru Nusantara dengan kualitas
+                    premium dan cita rasa yang khas.</p>
+                <div class="mt-4">
+                    <a href="{{ url_for('read') }}" class="btn btn-light btn-lg me-2">Lihat Inventaris</a>
+                    {% if session.username %}
+                    <a href="{{ url_for('create') }}" class="btn btn-outline-light btn-lg">Tambah Produk</a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-light btn-lg">Login untuk Tambah Produk</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-12 col-lg-4 text-center mt-4 mt-lg-0">
+                <div class="coffee-icon">
+                    <img src="{{ url_for('static', filename='home-img.png') }}" alt="rown coffee logo"
+                        class="img-fluid" width="100%" height="100%">
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- About Sections -->
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-md-12 text-center">
+                <h2 class="fw-bold">Filosofi Rown Coffee</h2>
+                <p class="text-muted">Kami percaya bahwa setiap cangkir kopi menceritakan kisah petani, tanah, dan
+                    proses yang membentuknya.</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                        <h4 class="card-title text-dark">Kualitas Lokal</h4>
+                        <p class="card-text">Kami menyeleksi biji kopi terbaik dari berbagai daerah di Indonesia,
+                            memastikan setiap produk berasal dari petani lokal yang terpercaya.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-leaf"></i>
+                        </div>
+                        <h4 class="card-title text-dark">Proses Terbaik</h4>
+                        <p class="card-text">Kami menggunakan proses sangrai terkendali untuk menjaga cita rasa khas
+                            setiap jenis kopi, dengan tingkat sangrai yang disesuaikan.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-bar-chart"></i>
+                        </div>
+                        <h4 class="card-title text-dark">Premium Experience</h4>
+                        <p class="card-text">Setiap cangkir kopi yang Anda nikmati adalah hasil dari proses yang penuh
+                            perhatian terhadap kualitas dan kepuasan pelanggan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Overview Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-md-12 text-center">
+                <h2 class="fw-bold">Jenis Kopi Kami</h2>
+                <p class="text-muted">Berbagai pilihan biji kopi berkualitas tinggi dari seluruh Nusantara</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3 col-sm-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Aceh Gayo</h5>
+                        <p class="card-text text-muted">Kopi dari dataran tinggi Gayo dengan cita rasa yang khas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Kintamani Bali</h5>
+                        <p class="card-text text-muted">Kopi unggul dari pegunungan Kintamani</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Toraja Sulawesi</h5>
+                        <p class="card-text text-muted">Kopi legendaris dengan aroma yang kuat</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Luwak Coffee</h5>
+                        <p class="card-text text-muted">Salah satu kopi termahal di dunia</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
