@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from models.Product import ProductModel
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'  # Change this to a random secret key in production
 product_model = ProductModel()
 
 # Static user data using dictionary
@@ -53,7 +54,7 @@ def index():
 
 @app.route('/produk')
 def read():
-    products = product_model.get_all_products()
+    products = product_model.getAllProduct()
     return render_template('read.html', products=products)
 
 @app.route('/produk/tambah', methods=['GET', 'POST'])
@@ -70,7 +71,7 @@ def create():
             'harga': request.form['harga'],
             'stok': request.form['stok']
         }
-        product_model.add_product(new_data)
+        product_model.setProduct(new_data)
         flash('Product added successfully', 'success')
         return redirect(url_for('read'))
     
@@ -82,7 +83,7 @@ def update(product_id):
         flash('Please log in to update products', 'error')
         return redirect(url_for('login'))
     
-    product = product_model.get_product_by_id(product_id)
+    product = product_model.getProductById(product_id)
     
     if request.method == 'POST':
         updated_data = {
@@ -92,7 +93,7 @@ def update(product_id):
             'harga': request.form['harga'],
             'stok': request.form['stok']
         }
-        product_model.update_product(product_id, updated_data)
+        product_model.updateProduct(product_id, updated_data)
         flash('Product updated successfully', 'success')
         return redirect(url_for('read'))
     
@@ -100,6 +101,6 @@ def update(product_id):
         return render_template('update.html', product=product)
     else:
         return redirect(url_for('read'))
-        
+    
 if __name__ == '__main__':
     app.run(debug=True)
