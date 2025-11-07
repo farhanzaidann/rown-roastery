@@ -49,7 +49,12 @@
                     <td>{{ product.stok }} kg</td>
                     <td>
                         {% if session.username %}
-                        <a href="{{ url_for('update', product_id=product.id) }}" class="btn btn-warning btn-sm">Ubah</a>
+                        <a href="{{ url_for('update', product_id=product.id) }}" class="btn btn-warning btn-sm me-1 text-white">Ubah</a>
+                        {% if session.role == 'admin' %}
+                        <form method="POST" action="{{ url_for('delete', product_id=product.id) }}" class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus produk {{ product.nama }}?')">Hapus</button>
+                        </form>
+                        {% endif %}
                         {% else %}
                         <span class="text-muted">Login diperlukan</span>
                         {% endif %}
