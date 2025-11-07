@@ -1,6 +1,5 @@
-
 :root {
-    --primary-red: #C90000; 
+    --primary-red: #C90000;
     --dark-red: #630000;
     --light-red: #f8d7da;
     --white: #FFFFFF;
@@ -26,14 +25,16 @@
 }
 
 .btn-primary-red {
-    background-color: var(--primary-red);
-    border-color: var(--primary-red);
+    background-color: var(--dark-red);
+    border-color: var(--dark-red);
     color: var(--white);
 }
 
 .btn-primary-red:hover {
     background-color: var(--dark-red);
     border-color: var(--dark-red);
+    color: var(--white);
+
 }
 
 .bg-header-gradient {
@@ -57,7 +58,7 @@
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
 .footer {
@@ -81,30 +82,27 @@
         width: 100%;
         margin-bottom: 10px;
     }
-    
+
     .d-md-flex {
         display: flex !important;
     }
-    
+
     .justify-content-md-end {
         justify-content: center !important;
     }
-    
+
     .me-md-2 {
         margin-right: 0 !important;
         margin-bottom: 10px;
     }
 }
 
-.coffee-icon {
-    color: var(--primary-red);
-}
-
 .alert {
     border-radius: 4px;
 }
 
-.table th, .table td {
+.table th,
+.table td {
     vertical-align: middle;
 }
 
@@ -112,7 +110,8 @@
     font-weight: 600;
 }
 
-html, body {
+html,
+body {
     height: 100%;
     margin: 0;
     padding: 0;

@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}Shop - Rown Coffee{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else 'success' if category == 'success' else 'info' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark">Katalog Produk</h2>
+        <div>
+            {% if session.username %}
+                {% if session.role == 'user' %}
+                    <a href="{{ url_for('cart') }}" class="btn btn-primary-red">Keranjang Saya <span class="badge bg-light text-dark">{{ session.cart|length if session.cart else 0 }}</span></a>
+                {% elif session.role == 'admin' %}
+                    <a href="{{ url_for('create') }}" class="btn btn-primary-red">Tambah Produk</a>
+                {% endif %}
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-primary-red">Login untuk Belanja</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if products %}
+    <div class="row g-4">
+        {% for product in products %}
+            {% if product.stok > 0 %}
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.nama }}</h5>
+                        <p class="card-text text-muted">
+                            <strong>Asal:</strong> {{ product.origin }}<br>
+                            <strong>Tingkat Sangrai:</strong> {{ product.roast }}
+                        </p>
+                        <p class="card-text">
+                            <strong>Harga:</strong> Rp {{ "{:,}".format(product.harga) }}<br>
+                            <strong>Stok Tersedia:</strong> {{ product.stok }} kg
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <form method="POST" action="{{ url_for('add_to_cart', product_id=product.id) }}" style="display:inline;">
+                                <input type="number" name="quantity" value="1" min="1" max="{{ product.stok }}" class="form-control d-inline w-auto" style="width:70px; display:inline;">
+                                <button type="submit" class="btn btn-primary-red btn-sm">Tambah ke Keranjang</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        Tidak ada produk tersedia saat ini.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

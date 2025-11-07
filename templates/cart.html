@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block title %}Keranjang Belanja - Rown Coffee{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else 'success' if category == 'success' else 'info' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark">Keranjang Belanja</h2>
+        <a href="{{ url_for('shop') }}" class="btn btn-outline-secondary">Lanjut Belanja</a>
+    </div>
+    
+    {% if cart_items %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead class="table-dark-red text-white">
+                        <tr>
+                            <th scope="col">Produk</th>
+                            <th scope="col">Asal</th>
+                            <th scope="col">Tingkat Sangrai</th>
+                            <th scope="col">Harga</th>
+                            <th scope="col">Jumlah</th>
+                            <th scope="col">Subtotal</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.origin }}</td>
+                            <td>{{ item.roast }}</td>
+                            <td>Rp {{ "{:,}".format(item.price) }}</td>
+                            <td>{{ item.quantity }} kg</td>
+                            <td>Rp {{ "{:,}".format(item.price * item.quantity) }}</td>
+                            <td>
+                                <a href="{{ url_for('remove_from_cart', product_id=item.id) }}" class="btn btn-danger btn-sm">Hapus</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-dark-red text-white">
+                    <h4 class="mb-0">Ringkasan Belanja</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total:</span>
+                        <strong>Rp {{ "{:,}".format(total) }}</strong>
+                    </div>
+                    <hr>
+                    <a href="{{ url_for('checkout') }}" class="btn btn-primary-red w-100">Proses Checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        Keranjang Anda masih kosong. <a href="{{ url_for('shop') }}" class="alert-link">Lanjutkan belanja</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

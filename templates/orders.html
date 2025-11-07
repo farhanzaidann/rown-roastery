@@ -1,0 +1,293 @@
+{% extends "layout.html" %}
+
+{% block title %}Daftar Pesanan - Rown Coffee{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else 'success' if category == 'success' else 'info' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark">Monitoring Pesanan</h2>
+    </div>
+    
+    <!-- Order status filter tabs -->
+    <ul class="nav nav-tabs mb-4" id="orderTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active text-dark-red" id="all-orders-tab" data-bs-toggle="tab" data-bs-target="#all-orders" type="button" role="tab">Semua Pesanan</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-dark-red" id="pending-orders-tab" data-bs-toggle="tab" data-bs-target="#pending-orders" type="button" role="tab">Pending</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-dark-red" id="confirmed-orders-tab" data-bs-toggle="tab" data-bs-target="#confirmed-orders" type="button" role="tab">Dikonfirmasi</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-dark-red" id="shipped-orders-tab" data-bs-toggle="tab" data-bs-target="#shipped-orders" type="button" role="tab">Dikirim</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-dark-red" id="delivered-orders-tab" data-bs-toggle="tab" data-bs-target="#delivered-orders" type="button" role="tab">Diterima</button>
+        </li>
+    </ul>
+    
+    <div class="tab-content" id="orderTabsContent">
+        <div class="tab-pane fade show active" id="all-orders" role="tabpanel">
+            {% if orders %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark-red text-white">
+                        <tr>
+                            <th scope="col">ID Pesanan</th>
+                            <th scope="col">Nama Pemesan</th>
+                            <th scope="col">Kontak</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Tanggal</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <th scope="row">#{{ order.id }}</th>
+                            <td>{{ order.user_name }}</td>
+                            <td>{{ order.phone }}</td>
+                            <td>Rp {{ "{:,}".format(order.total_amount) }}</td>
+                            <td>{{ order.created_at }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if order.status == 'pending' %}bg-warning text-dark
+                                    {% elif order.status == 'confirmed' %}bg-primary
+                                    {% elif order.status == 'shipped' %}bg-info
+                                    {% elif order.status == 'delivered' %}bg-success
+                                    {% elif order.status == 'cancelled' %}bg-danger
+                                    {% else %}bg-secondary{% endif %}">
+                                    {{ order.status|title }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton-{{ order.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Ubah Status
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{ order.id }}">
+                                        <li><a class="dropdown-item" href="{{ url_for('update_order_status', order_id=order.id, status='pending') }}">Pending</a></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('update_order_status', order_id=order.id, status='confirmed') }}">Dikonfirmasi</a></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('update_order_status', order_id=order.id, status='shipped') }}">Dikirim</a></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('update_order_status', order_id=order.id, status='delivered') }}">Diterima</a></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('update_order_status', order_id=order.id, status='cancelled') }}">Dibatalkan</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info" role="alert">
+                Tidak ada pesanan.
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="tab-pane fade" id="pending-orders" role="tabpanel">
+            {% set pending_orders = orders|selectattr('status', 'equalto', 'pending')|list %}
+            {% if pending_orders %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark-red text-white">
+                        <tr>
+                            <th scope="col">ID Pesanan</th>
+                            <th scope="col">Nama Pemesan</th>
+                            <th scope="col">Kontak</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Tanggal</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in pending_orders %}
+                        <tr>
+                            <th scope="row">#{{ order.id }}</th>
+                            <td>{{ order.user_name }}</td>
+                            <td>{{ order.phone }}</td>
+                            <td>Rp {{ "{:,}".format(order.total_amount) }}</td>
+                            <td>{{ order.created_at }}</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton-{{ order.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Ubah Status
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{ order.id }}">
+                                        <li><a class="dropdown-item" href="{{ url_for('update_order_status', order_id=order.id, status='confirmed') }}">Dikonfirmasi</a></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('update_order_status', order_id=order.id, status='shipped') }}">Dikirim</a></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('update_order_status', order_id=order.id, status='delivered') }}">Diterima</a></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('update_order_status', order_id=order.id, status='cancelled') }}">Dibatalkan</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info" role="alert">
+                Tidak ada pesanan pending.
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="tab-pane fade" id="confirmed-orders" role="tabpanel">
+            {% set confirmed_orders = orders|selectattr('status', 'equalto', 'confirmed')|list %}
+            {% if confirmed_orders %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark-red text-white">
+                        <tr>
+                            <th scope="col">ID Pesanan</th>
+                            <th scope="col">Nama Pemesan</th>
+                            <th scope="col">Kontak</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Tanggal</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in confirmed_orders %}
+                        <tr>
+                            <th scope="row">#{{ order.id }}</th>
+                            <td>{{ order.user_name }}</td>
+                            <td>{{ order.phone }}</td>
+                            <td>Rp {{ "{:,}".format(order.total_amount) }}</td>
+                            <td>{{ order.created_at }}</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton-{{ order.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Ubah Status
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{ order.id }}">
+                                        <li><a class="dropdown-item" href="{{ url_for('update_order_status', order_id=order.id, status='shipped') }}">Dikirim</a></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('update_order_status', order_id=order.id, status='delivered') }}">Diterima</a></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('update_order_status', order_id=order.id, status='cancelled') }}">Dibatalkan</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info" role="alert">
+                Tidak ada pesanan yang dikonfirmasi.
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="tab-pane fade" id="shipped-orders" role="tabpanel">
+            {% set shipped_orders = orders|selectattr('status', 'equalto', 'shipped')|list %}
+            {% if shipped_orders %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark-red text-white">
+                        <tr>
+                            <th scope="col">ID Pesanan</th>
+                            <th scope="col">Nama Pemesan</th>
+                            <th scope="col">Kontak</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Tanggal</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in shipped_orders %}
+                        <tr>
+                            <th scope="row">#{{ order.id }}</th>
+                            <td>{{ order.user_name }}</td>
+                            <td>{{ order.phone }}</td>
+                            <td>Rp {{ "{:,}".format(order.total_amount) }}</td>
+                            <td>{{ order.created_at }}</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton-{{ order.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Ubah Status
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{ order.id }}">
+                                        <li><a class="dropdown-item" href="{{ url_for('update_order_status', order_id=order.id, status='delivered') }}">Diterima</a></li>
+                                        <li><a class="dropdown-item" href="{{ url_for('update_order_status', order_id=order.id, status='cancelled') }}">Dibatalkan</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info" role="alert">
+                Tidak ada pesanan yang dikirim.
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="tab-pane fade" id="delivered-orders" role="tabpanel">
+            {% set delivered_orders = orders|selectattr('status', 'equalto', 'delivered')|list %}
+            {% if delivered_orders %}
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark-red text-white">
+                        <tr>
+                            <th scope="col">ID Pesanan</th>
+                            <th scope="col">Nama Pemesan</th>
+                            <th scope="col">Kontak</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Tanggal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in delivered_orders %}
+                        <tr>
+                            <th scope="row">#{{ order.id }}</th>
+                            <td>{{ order.user_name }}</td>
+                            <td>{{ order.phone }}</td>
+                            <td>Rp {{ "{:,}".format(order.total_amount) }}</td>
+                            <td>{{ order.created_at }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info" role="alert">
+                Tidak ada pesanan yang diterima.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Initialize tabs
+document.addEventListener('DOMContentLoaded', function() {
+    const triggerTabList = [].slice.call(document.querySelectorAll('#orderTabs button'));
+    triggerTabList.forEach(function (triggerEl) {
+        const tabTrigger = new bootstrap.Tab(triggerEl);
+        
+        triggerEl.addEventListener('click', function (event) {
+            event.preventDefault();
+            tabTrigger.show();
+        });
+    });
+});
+</script>
+{% endblock %}
