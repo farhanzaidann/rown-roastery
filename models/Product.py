@@ -194,3 +194,37 @@ class ProductModel:
         }
         self.products.append(new_product)
         return new_product
+    
+    def getAllProduct(self):
+        """Return all products in the inventory"""
+        return self.products
+    
+    def getProductById(self, product_id):
+        """Return a specific product by its ID"""
+        for product in self.products:
+            if product['id'] == product_id:
+                return product
+        return None
+    
+    def updateProduct(self, product_id, updated_data):
+        """Update an existing product by its ID"""
+        for i, product in enumerate(self.products):
+            if product['id'] == product_id:
+                self.products[i] = {
+                    'id': product_id,
+                    'nama': updated_data['nama'],
+                    'origin': updated_data['origin'],
+                    'roast': updated_data['roast'],
+                    'harga': int(updated_data['harga']),
+                    'stok': int(updated_data['stok'])
+                }
+                return self.products[i]
+        return None
+
+    def deleteProduct(self, product_id):
+        """Delete a product by its ID"""
+        for i, product in enumerate(self.products):
+            if product['id'] == product_id:
+                deleted_product = self.products.pop(i)
+                return deleted_product
+        return None
