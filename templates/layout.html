@@ -27,21 +27,41 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('index') }}">Beranda</a>
                     </li>
+                    {% if session.username and session.role == 'admin' %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('read') }}">Inventaris</a>
                     </li>
-                    {% if session.username %}
+                    {% elif session.username and session.role == 'user' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('create') }}">Tambah Produk</a>
+                        <a class="nav-link" href="{{ url_for('shop') }}">Belanja</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Akun
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout ({{ session.username }})</a></li>
-                        </ul>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('shop') }}">Belanja</a>
                     </li>
+                    {% endif %}
+                    
+                    {% if session.username %}
+                        {% if session.role == 'admin' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('orders') }}">Pesanan</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('create') }}">Tambah Produk</a>
+                        </li>
+                        {% elif session.role == 'user' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('cart') }}">Keranjang <span class="badge bg-light text-dark">{{ session.cart|length if session.cart else 0 }}</span></a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Akun
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout ({{ session.username }})</a></li>
+                            </ul>
+                        </li>
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('login') }}">Login</a>
@@ -56,13 +76,13 @@
     <main>
         {% block content %}{% endblock %}
     </main>
-
+    
     <!-- Footer -->
     <footer class="footer bg-dark-red text-white py-4 mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <p>&copy; 2025 Rown Coffee - Sistem Inventaris. Dibuat oleh 3Roda Company</p>
+                    <p>&copy; 2025 Rown Coffee - E-Commerce. Created by 3RODA Company</p>
                 </div>
             </div>
         </div>
