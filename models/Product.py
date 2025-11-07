@@ -220,3 +220,11 @@ class ProductModel:
                 }
                 return self.products[i]
         return None
+
+    def deleteProduct(self, product_id):
+        """Delete a product by its ID"""
+        for i, product in enumerate(self.products):
+            if product['id'] == product_id:
+                deleted_product = self.products.pop(i)
+                return deleted_product
+        return None
