@@ -183,7 +183,7 @@ class ProductModel:
     def setProduct(self, new_data):
         """Add a new product to the inventory"""
         # Find the highest ID and increment it
-        new_id = max([p['id'] for p in self.products]) + 1 if self.products else 1
+        new_id = max([p['id'] for p in self.products]) + 1
         new_product = {
             'id': new_id,
             'nama': new_data['nama'],

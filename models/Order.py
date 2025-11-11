@@ -23,18 +23,18 @@ class OrderModel:
         return order
 
     def get_all_orders(self):
-        """Return all orders"""
+        """mengambil seluruh data pesanan"""
         return self.orders
 
     def get_order_by_id(self, order_id):
-        """Return a specific order by its ID"""
+        """mengambil data berdasasrkan id"""
         for order in self.orders:
             if order['id'] == order_id:
                 return order
         return None
 
     def update_order_status(self, order_id, new_status):
-        """Update the status of an order"""
+        """update status ordernya"""
         for i, order in enumerate(self.orders):
             if order['id'] == order_id:
                 self.orders[i]['status'] = new_status
@@ -42,5 +42,5 @@ class OrderModel:
         return None
 
     def get_orders_by_status(self, status):
-        """Return all orders with a specific status"""
+        """mengambil data berdasarkan status"""
         return [order for order in self.orders if order['status'] == status]

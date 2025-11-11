@@ -7,7 +7,6 @@ app.secret_key = 'tiga_roda_kopi_secret'
 product_model = ProductModel()
 order_model = OrderModel()
 
-# Static user data using dictionary
 users = {
     'admin': {
         'username': 'admin',
@@ -21,7 +20,6 @@ users = {
     },
 }
 
-# Authentication routes
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -33,7 +31,7 @@ def login():
             session['username'] = username
             session['role'] = users[username]['role']
             flash('Login successful!', 'success')
-            return redirect(url_for('read'))
+            return redirect(url_for('index'))
         else:
             flash('Invalid username or password', 'error')
     
@@ -44,7 +42,7 @@ def logout():
     session.pop('username', None)
     session.pop('role', None)
     flash('You have been logged out.', 'info')
-    return redirect(url_for('read'))
+    return redirect(url_for('index'))
 
 # Authentication helper functions
 def is_logged_in():

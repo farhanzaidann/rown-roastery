@@ -3,6 +3,7 @@
 {% block title %}Inventaris - Rown Roastery{% endblock %}
 
 {% block content %}
+{% if session.role == 'admin' %}
 <div class="container mt-5">
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -75,4 +76,14 @@
     </div>
     {% endif %}
 </div>
+{% else %}
+<div class="container mt-5">
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Akses Ditolak!</h4>
+        <p>Anda tidak memiliki izin untuk mengakses halaman ini. Halaman ini hanya tersedia untuk admin.</p>
+        <hr>
+        <a href="{{ url_for('index') }}" class="btn btn-primary">Kembali ke Beranda</a>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
