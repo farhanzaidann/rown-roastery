@@ -1,230 +1,82 @@
+from models.db import get_db_connection
+
 class ProductModel:
     def __init__(self):
-        self.products = [
-            {
-                'id': 1,
-                'nama': 'Aceh Gayo',
-                'origin': 'Aceh',
-                'roast': 'Medium',
-                'harga': 150000,
-                'stok': 25
-            },
-            {
-                'id': 2,
-                'nama': 'Kintamani Bali',
-                'origin': 'Bali',
-                'roast': 'Light',
-                'harga': 120000,
-                'stok': 18
-            },
-            {
-                'id': 3,
-                'nama': 'Toraja Sulawesi',
-                'origin': 'Sulawesi',
-                'roast': 'Dark',
-                'harga': 165000,
-                'stok': 30
-            },
-            {
-                'id': 4,
-                'nama': 'Luwak Coffee',
-                'origin': 'Sumatra',
-                'roast': 'Medium',
-                'harga': 300000,
-                'stok': 10
-            },
-            {
-                'id': 5,
-                'nama': 'Java Preanger',
-                'origin': 'West Java',
-                'roast': 'Light',
-                'harga': 135000,
-                'stok': 22
-            },
-            {
-                'id': 6,
-                'nama': 'Papua Wamena',
-                'origin': 'Papua',
-                'roast': 'Medium',
-                'harga': 175000,
-                'stok': 15
-            },
-            {
-                'id': 7,
-                'nama': 'Sidikalang',
-                'origin': 'North Sumatra',
-                'roast': 'Dark',
-                'harga': 140000,
-                'stok': 20
-            },
-            {
-                'id': 8,
-                'nama': 'Malabar',
-                'origin': 'West Java',
-                'roast': 'Light',
-                'harga': 125000,
-                'stok': 17
-            },
-            {
-                'id': 9,
-                'nama': 'Tawangmangu',
-                'origin': 'Central Java',
-                'roast': 'Medium',
-                'harga': 130000,
-                'stok': 24
-            },
-            {
-                'id': 10,
-                'nama': 'Dieng Plateau',
-                'origin': 'Central Java',
-                'roast': 'Dark',
-                'harga': 145000,
-                'stok': 19
-            },
-            {
-                'id': 11,
-                'nama': 'Ijen Raung',
-                'origin': 'East Java',
-                'roast': 'Light',
-                'harga': 155000,
-                'stok': 16
-            },
-            {
-                'id': 12,
-                'nama': 'Flores Bajawa',
-                'origin': 'Nusa Tenggara',
-                'roast': 'Medium',
-                'harga': 170000,
-                'stok': 21
-            },
-            {
-                'id': 13,
-                'nama': 'Sumatra Mandheling',
-                'origin': 'North Sumatra',
-                'roast': 'Dark',
-                'harga': 160000,
-                'stok': 14
-            },
-            {
-                'id': 14,
-                'nama': 'Lampung Robusta',
-                'origin': 'Lampung',
-                'roast': 'Medium',
-                'harga': 110000,
-                'stok': 28
-            },
-            {
-                'id': 15,
-                'nama': 'Engano Coffee',
-                'origin': 'Bengkulu',
-                'roast': 'Light',
-                'harga': 125000,
-                'stok': 23
-            },
-            {
-                'id': 16,
-                'nama': 'Lombok Coffee',
-                'origin': 'West Nusa Tenggara',
-                'roast': 'Dark',
-                'harga': 150000,
-                'stok': 13
-            },
-            {
-                'id': 17,
-                'nama': 'Sulawesi Kalossi',
-                'origin': 'South Sulawesi',
-                'roast': 'Medium',
-                'harga': 180000,
-                'stok': 12
-            },
-            {
-                'id': 18,
-                'nama': 'Gayo Mountain',
-                'origin': 'Aceh',
-                'roast': 'Light',
-                'harga': 155000,
-                'stok': 26
-            },
-            {
-                'id': 19,
-                'nama': 'Kopiling Coffee',
-                'origin': 'Central Java',
-                'roast': 'Dark',
-                'harga': 135000,
-                'stok': 11
-            },
-            {
-                'id': 20,
-                'nama': 'Wamena Highland',
-                'origin': 'Papua',
-                'roast': 'Medium',
-                'harga': 185000,
-                'stok': 9
-            },
-            {
-                'id': 21,
-                'nama': 'Aceh Mountain',
-                'origin': 'Aceh',
-                'roast': 'Light',
-                'harga': 160000,
-                'stok': 27
-            },
-            {
-                'id': 22,
-                'nama': 'Kintamani Premium',
-                'origin': 'Bali',
-                'roast': 'Medium',
-                'harga': 140000,
-                'stok': 20
-            }
-        ]
-
+        pass
 
     def setProduct(self, new_data):
         """Add a new product to the inventory"""
-        # Find the highest ID and increment it
-        new_id = max([p['id'] for p in self.products]) + 1
-        new_product = {
-            'id': new_id,
-            'nama': new_data['nama'],
-            'origin': new_data['origin'],
-            'roast': new_data['roast'],
-            'harga': int(new_data['harga']),
-            'stok': int(new_data['stok'])
-        }
-        self.products.append(new_product)
-        return new_product
+        connection = get_db_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "INSERT INTO products (nama, origin, roast, harga, stok) VALUES (%s, %s, %s, %s, %s)"
+                cursor.execute(sql, (
+                    new_data['nama'],
+                    new_data['origin'],
+                    new_data['roast'],
+                    int(new_data['harga']),
+                    int(new_data['stok'])
+                ))
+            connection.commit()
+            return True
+        finally:
+            connection.close()
     
     def getAllProduct(self):
         """Return all products in the inventory"""
-        return self.products
+        connection = get_db_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "SELECT * FROM products"
+                cursor.execute(sql)
+                result = cursor.fetchall()
+                return result
+        finally:
+            connection.close()
     
     def getProductById(self, product_id):
         """Return a specific product by its ID"""
-        for product in self.products:
-            if product['id'] == product_id:
-                return product
-        return None
+        connection = get_db_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "SELECT * FROM products WHERE id = %s"
+                cursor.execute(sql, (product_id,))
+                result = cursor.fetchone()
+                return result
+        finally:
+            connection.close()
     
     def updateProduct(self, product_id, updated_data):
         """Update an existing product by its ID"""
-        for i, product in enumerate(self.products):
-            if product['id'] == product_id:
-                self.products[i] = {
-                    'id': product_id,
-                    'nama': updated_data['nama'],
-                    'origin': updated_data['origin'],
-                    'roast': updated_data['roast'],
-                    'harga': int(updated_data['harga']),
-                    'stok': int(updated_data['stok'])
-                }
-                return self.products[i]
-        return None
+        connection = get_db_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = """
+                    UPDATE products 
+                    SET nama=%s, origin=%s, roast=%s, harga=%s, stok=%s 
+                    WHERE id=%s
+                """
+                cursor.execute(sql, (
+                    updated_data['nama'],
+                    updated_data['origin'],
+                    updated_data['roast'],
+                    int(updated_data['harga']),
+                    int(updated_data['stok']),
+                    product_id
+                ))
+            connection.commit()
+            return True
+        finally:
+            connection.close()
 
     def deleteProduct(self, product_id):
         """Delete a product by its ID"""
-        for i, product in enumerate(self.products):
-            if product['id'] == product_id:
-                deleted_product = self.products.pop(i)
-                return deleted_product
-        return None
+        connection = get_db_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "DELETE FROM products WHERE id = %s"
+                cursor.execute(sql, (product_id,))
+            connection.commit()
+            return True
+        finally:
+            connection.close()
