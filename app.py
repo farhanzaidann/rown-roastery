@@ -1,24 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from models.Product import ProductModel
 from models.Order import OrderModel
+from models.UserModel import UserModel
 
 app = Flask(__name__)
 app.secret_key = 'tiga_roda_kopi_secret'
 product_model = ProductModel()
 order_model = OrderModel()
-
-users = {
-    'admin': {
-        'username': 'admin',
-        'password': '2wsx1qaz', 
-        'role': 'admin'
-    },
-    'user': {
-        'username': 'user',
-        'password': '2wsx1qaz',  
-        'role': 'user'
-    },
-}
+user_model = UserModel()
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -26,10 +15,13 @@ def login():
         username = request.form['username']
         password = request.form['password']
         
-        # Check if user exists and password is correct
-        if username in users and users[username]['password'] == password:
-            session['username'] = username
-            session['role'] = users[username]['role']
+        # Cari pengguna di database
+        user = user_model.find_by_username(username)
+        
+        # Verifikasi pengguna dan password
+        if user and user['password'] == password:
+            session['username'] = user['username']
+            session['role'] = user['role']
             flash('Login successful!', 'success')
             return redirect(url_for('index'))
         else:
