@@ -274,7 +274,7 @@ def orders():
 def update_order_status(order_id, status):
     if not is_logged_in() or session['role'] != 'admin':
         flash('Access denied. Admin privileges required.', 'error')
-        return redirect(url_for('login'))
+        return redisrect(url_for('login'))
     
     # Valid status options
     valid_statuses = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled']

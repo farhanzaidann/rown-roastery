@@ -107,10 +107,10 @@ class OrderModel:
                 cursor.execute(sql, (new_status, order_id))
                 
                 if cursor.rowcount > 0:
+                    connection.commit()
                     # Return updated order (simplified)
                     return {'id': order_id, 'status': new_status}
                 return None
-            connection.commit()
         finally:
             connection.close()
 
